@@ -15,17 +15,17 @@ maxNum.textContent = max;
 
 UIgame.addEventListener('mousedown', (e) => {
     if(e.target.className === 'play-again'){
-        console.log('Clicou');
-        
         window.location.reload();
     }
 })
 
+winningNum = getWinNumber();
+
 guessBtn.addEventListener('click', () => {
     let guess = parseInt(guessInput.value);
-    winningNum = setNumber();
     if (guess < min || guess > max || isNaN(guess)) {
         setMessage(`Please, enter a value between ${min} and ${max}`, 'red');
+        guessInput.value = '';
     } else {
         if (guess === winningNum) {
             gameOver(true, `Congratulations! You have guessed the number ${winningNum}!`)
@@ -56,7 +56,7 @@ function setMessage(msg, color) {
     message.textContent = msg;
 }
 
-function setNumber() {
-    let num = Math.floor(Math.random() * 10 + 1);
+function getWinNumber() {
+    let num = Math.floor(Math.random() * (max - min + 1) + min);
     return num;
 }
