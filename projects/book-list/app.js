@@ -14,7 +14,7 @@ UI.prototype.addBookToList = function (book) {
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>${book.isbn}</td>
-        <td><a href="#" class="delete">X</a></td>
+        <td><a href="#" class="delete"><i class="fa fa-trash"></i></a></td>
     `;
     list.appendChild(row);
 
@@ -37,9 +37,14 @@ UI.prototype.showAlert = function (message, className){
 
     setTimeout(function(){
         document.querySelector('.alert').remove();
-    }, 3000);
+    }, 2000);
 }
 
+UI.prototype.removeBook = function (target) {
+    if(target.classList.contains('fa-trash')){
+        target.parentElement.parentElement.parentElement.remove();
+    }
+}
 
 document.querySelector('.book-form').addEventListener('submit', function (e) {
     const title = document.querySelector('#title').value;
@@ -59,5 +64,12 @@ document.querySelector('.book-form').addEventListener('submit', function (e) {
     }
 
 
+    e.preventDefault();
+});
+
+document.querySelector('#book-list').addEventListener('click', function(e){
+    const ui = new UI();
+    ui.removeBook(e.target);
+    ui.showAlert(`Book successfully removed!`, 'success');
     e.preventDefault();
 })
