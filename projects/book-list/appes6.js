@@ -15,7 +15,7 @@ class UI {
             <td>${book.title}</td>
             <td>${book.author}</td>
             <td>${book.isbn}</td>
-            <td><a href="#" class="delete"><i class="fa fa-trash"></i></a></td>
+            <td><a href="#" class="delete">X</a></td>
         `;
         list.appendChild(row);
     }
@@ -41,11 +41,53 @@ class UI {
     }
 
     removeBook(target) {
-        if(target.classList.contains('fa-trash')){
-            target.parentElement.parentElement.parentElement.remove();
+        if(target.classList.contains('delete')){
+            target.parentElement.parentElement.remove();
         }
     }
 }
+
+class Store {
+    static getBooks(){
+        let books;
+        if(localStorage.getItem('books') === null){
+            books = [];
+        } else {
+            books = JSON.parse(localStorage.getItem('books'))
+        }
+
+        return books;
+    }
+
+    static showBooks(){
+        const books = Store.getBooks();
+        books.forEach((book) => {
+            const ui = new UI();
+            ui.addBookToList(book);
+        });
+    }
+
+    static addBook(book){
+        const books = Store.getBooks();
+
+        books.push(book);
+
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+
+    static removeBook(isbn){
+        const books = Store.getBooks();
+        books.forEach(function (book, index) {
+            if(book.isbn === isbn){
+                books.splice(index, 1);
+            }
+        });
+
+        localStorage.setItem('books', JSON.stringify(books));        
+    }   
+}
+
+document.addEventListener('DOMContentLoaded', Store.showBooks);
 
 document.querySelector('.book-form').addEventListener('submit', function (e) {
     const title = document.querySelector('#title').value;
@@ -62,6 +104,7 @@ document.querySelector('.book-form').addEventListener('submit', function (e) {
         ui.addBookToList(book);
         ui.showAlert(`Book successfully added!`, 'success')
         ui.clearFields();
+        Store.addBook(book);
     }
 
 
@@ -71,6 +114,7 @@ document.querySelector('.book-form').addEventListener('submit', function (e) {
 document.querySelector('#book-list').addEventListener('click', function(e){
     const ui = new UI();
     ui.removeBook(e.target);
+    Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
     ui.showAlert(`Book successfully removed!`, 'success');
     e.preventDefault();
 });
