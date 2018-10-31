@@ -1,0 +1,1 @@
+Only a plain text data to be showed in the console.
