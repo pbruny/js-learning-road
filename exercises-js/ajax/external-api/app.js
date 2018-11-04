@@ -1,15 +1,17 @@
 document.querySelector('.get-jokes').addEventListener('click', getJokes);
 
 function getJokes(e){
-    const number = document.querySelector('input[type="number"').value;
+    let number = document.querySelector('input[type="number"').value;
     const xhr = new XMLHttpRequest();
-
+    if(number == ''){
+        number = 1;
+    }
+    
     xhr.open('GET', `http://api.icndb.com/jokes/random/${number}`, true);
 
     xhr.onload = function() {
         if(this.status === 200){
             const response = JSON.parse(this.responseText); 
-            
             let output = '';
             if(response.type === 'success'){
                 response.value.forEach((joke) => {
@@ -24,7 +26,6 @@ function getJokes(e){
     }
 
     xhr.send();
-    
-    
+
     e.preventDefault();
 }
