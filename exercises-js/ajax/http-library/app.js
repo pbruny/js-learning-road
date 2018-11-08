@@ -1,39 +1,27 @@
-const http = new easyHTTP();
+const http = new EasyHTTP;
 
-/*http.get('https://jsonplaceholder.typicode.com/posts/5', (err, posts) => {
-    if(err){
-        console.log(err);
-    }else{
-        console.log(posts);
-    }
-});*/
+//Get Users
+// http.get('https://jsonplaceholder.typicode.com/users')
+// .then(data => console.log(data))
+// .catch(err => console.log(err))
 
 const data = {
-    title: 'Custom New Post',
-    body: 'Lorem ipsum is the new fun'
+    name: 'John Doe',
+    username: 'johndoe',
+    email: 'jdoe@gmail.com'
 }
 
-/*http.post('https://jsonplaceholder.typicode.com/posts', data, (err, post) => {
-    if(err){
-        console.log(err);
-    } else {
-        console.log(post);   
-    }
-})*/
+//Create user
+// http.post('https://jsonplaceholder.typicode.com/users', data)
+// .then(data => console.log(data))
+// .catch(err => console.log(err))
 
-/*http.put('https://jsonplaceholder.typicode.com/posts/5', data, (err, post) => {
-    if(err){
-        console.log(err);
-    } else {
-        console.log(post);   
-    }
-})*/
+//Update user
+// http.put('https://jsonplaceholder.typicode.com/users/3', data)
+// .then(data => console.log(data))
+// .catch(err => console.log(err))
 
-http.delete('https://jsonplaceholder.typicode.com/posts/5', (err, response) => {
-    if(err){
-        console.log(err);
-    }else{
-        console.log(response);
-    }
-});
-
+//Delete user
+http.delete('https://jsonplaceholder.typicode.com/users/3')
+.then(data => console.log(data))
+.catch(err => console.log(err))
