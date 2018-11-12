@@ -10,12 +10,12 @@ searchInput.addEventListener('keyup', (e) => {
         github.getUser(userText)
         .then(data => {
             if(data.profile.message === 'Not Found'){
-                ui.clearUser();
+                
             }else{
                 ui.showProfile(data.profile);               
             }
         })
     } else{
-        //clear user
+        ui.clearUserProfile();
     }
 })

@@ -32,6 +32,7 @@ class UI {
             <div id="repos"></div>
         `;
     }
-    clearUser(){
+    clearUserProfile(){
+        this.profile.innerHTML = '';
     }
 }
