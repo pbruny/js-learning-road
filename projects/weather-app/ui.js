@@ -19,7 +19,7 @@ class UI {
         this.humidity.textContent = `Relative humidity: ${weather.relative_humidity}`;
         this.dewpoint.textContent = `Dewpoint: ${weather.dewpoint_string}`
         this.feelsLike.textContent = `Feels like: ${weather.feelslike_string}`;
-        this.wind.textContent = `Wind:  ${weather.wind_string} ${weather.wind_mph}mph ${weather.wind_dir}`;
+        this.wind.textContent = `Wind:  ${weather.wind_string}`;
 
     }
 }
