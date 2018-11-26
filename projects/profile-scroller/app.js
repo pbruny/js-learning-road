@@ -41,3 +41,37 @@ const data = [
     }
 ]
 
+const profiles = profileIterator(data);
+
+document.querySelector('#next').addEventListener('click', nextProfile);
+
+function nextProfile() {
+    const currentProfile = profiles.next().value;
+
+    if (!currentProfile) {
+        document.querySelector('#profileDisplay').innerHTML = `<h3>There is no other profile to show</h3>`;
+        document.querySelector('#imageDisplay').innerHTML = '';
+    } else {       
+        document.querySelector('#profileDisplay').innerHTML = `
+        <ul class="list-group">
+            <li class="list-group-item">Name: ${currentProfile.name}</li>
+            <li class="list-group-item">Age: ${currentProfile.age}</li>
+            <li class="list-group-item">Gender: ${currentProfile.gender}</li>
+            <li class="list-group-item">Preference: ${currentProfile.lookingfor}</li>
+            <li class="list-group-item">Location: ${currentProfile.location}</li>
+        </ul>
+        `;
+        document.querySelector('#imageDisplay').innerHTML = `<img src="${currentProfile.image}">`;
+    }
+}
+
+function profileIterator(profiles) {
+    let nextIndex = 0;
+
+    return {
+        next: function () {
+            return nextIndex < profiles.length ? { value: profiles[nextIndex++], done: false } :
+                { done: true }
+        }
+    }
+}
