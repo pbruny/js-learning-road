@@ -48,9 +48,12 @@ document.querySelector('#next').addEventListener('click', nextProfile);
 function nextProfile() {
     const currentProfile = profiles.next().value;
 
-    if (!currentProfile) {
-        document.querySelector('#profileDisplay').innerHTML = `<h3>There is no other profile to show</h3>`;
+    if (currentProfile === undefined) {
+        document.querySelector('#profileDisplay').innerHTML = `<h3>There is no other profile to show</h3><br><h4>Reloading the page in a while</h4>`;
         document.querySelector('#imageDisplay').innerHTML = '';
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
     } else {       
         document.querySelector('#profileDisplay').innerHTML = `
         <ul class="list-group">
