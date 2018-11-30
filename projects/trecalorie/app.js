@@ -45,6 +45,9 @@ const itemController = (function () {
         setCurrentItem: function (item) {
             data.currentItem = item;
         },
+        getCurrentItem: function () {
+            return data.currentItem;
+        },
         getData: function () {
             return data;
         },
@@ -105,6 +108,11 @@ const UIController = (function () {
             document.querySelector(UISelectors.itemName).value = '';
             document.querySelector(UISelectors.itemCalories).value = '';
         },
+        addItemToEdit: function () {
+            document.querySelector(UISelectors.itemName).value = itemController.getCurrentItem().name;
+            document.querySelector(UISelectors.itemCalories).value = itemController.getCurrentItem().calories;
+            UIController.showEditState();
+        },
         showTotalCalories: function (totalCalories) {
             document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
         },
@@ -114,6 +122,12 @@ const UIController = (function () {
             document.querySelector(UISelectors.deleteBtn).style.display = 'none';
             document.querySelector(UISelectors.backBtn).style.display = 'none';
             document.querySelector(UISelectors.addBtn).style.display = 'inline';
+        },
+        showEditState: function () {
+            document.querySelector(UISelectors.updateBtn).style.display = 'inline';
+            document.querySelector(UISelectors.deleteBtn).style.display = 'inline';
+            document.querySelector(UISelectors.backBtn).style.display = 'inline';
+            document.querySelector(UISelectors.addBtn).style.display = 'none';
         }
     }
 
@@ -124,7 +138,8 @@ const appController = (function (itemController, UIController, storageController
     const loadEventListeners = function () {
         const UISelectors = UIController.getSelectors();
         document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
-        document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateSubmit);
+        document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateClick);
+        document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState)
     }
 
     const itemAddSubmit = function (e) {
@@ -143,14 +158,15 @@ const appController = (function (itemController, UIController, storageController
         e.preventDefault();
     }
 
-    const itemUpdateSubmit = function (e) {
+    const itemUpdateClick = function (e) {
         
         if(e.target.classList.contains('edit-item')){
             const itemID = e.target.parentNode.parentNode.id;
             const itemIDArr = itemID.split('-');
             const id = parseInt(itemIDArr[1]);
             const itemToEdit = itemController.getItemById(id);
-            console.log(itemToEdit);
+            itemController.setCurrentItem(itemToEdit);
+            UIController.addItemToEdit();
         }
             
         e.preventDefault();
