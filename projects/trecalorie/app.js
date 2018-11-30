@@ -57,6 +57,15 @@ const itemController = (function () {
 
             return foundItem;
         },
+        deleteItem: function (id) {
+            const ids = data.items.map(item => {
+                return item.id;
+            })
+
+            const index = ids.indexOf(id);
+
+            data.items.splice(index, 1);
+        },
         setCurrentItem: function (item) {
             data.currentItem = item;
         },
@@ -79,7 +88,7 @@ const itemController = (function () {
             return data.totalCalories;
         },
         clearData: function () {
-            data.items.length = 0;
+            data.items = [];
             data.totalCalories = 0;
             data.currentItem = null;
         }    
@@ -126,6 +135,11 @@ const UIController = (function () {
             li.innerHTML = `<strong>${item.name}:</strong> <em>${item.calories} calories</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a>`;
             document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
         },
+        deleteListItem: function (id) {
+            const itemID = `#item-${id}`;
+            const item = document.querySelector(itemID);
+            item.remove();
+        },
         clearInputFields: function () {
             document.querySelector(UISelectors.itemName).value = '';
             document.querySelector(UISelectors.itemCalories).value = '';
@@ -164,7 +178,13 @@ const UIController = (function () {
             })
         },
         clearUIList: function () {
-            document.querySelector(UISelectors.itemList).innerHTML = '';
+            let listItems = document.querySelectorAll(UISelectors.listItems);
+
+            listItems = Array.from(listItems);
+
+            listItems.forEach(item => {
+                item.remove();
+            })
         }
     }
 
@@ -185,6 +205,11 @@ const appController = (function (itemController, UIController, storageController
         document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState);
         document.querySelector(UISelectors.updateBtn).addEventListener('click', itenUpdateSubmit);
         document.querySelector(UISelectors.clearBtn).addEventListener('click', clearListItems);
+        document.querySelector(UISelectors.deleteBtn).addEventListener('click', itemDeleteSubmit);
+    }
+
+    const calculateAndShowCalories = function () {
+        UIController.showTotalCalories(itemController.getTotalCalories());
     }
 
     const itemAddSubmit = function (e) {
@@ -195,8 +220,7 @@ const appController = (function (itemController, UIController, storageController
             UIController.addListItem(newItem);
         }
 
-        const totalCalories = itemController.getTotalCalories();
-        UIController.showTotalCalories(totalCalories);
+        calculateAndShowCalories();
 
         UIController.clearInputFields();
         
@@ -222,9 +246,20 @@ const appController = (function (itemController, UIController, storageController
         
         const editedItem = itemController.addUpdatedItem(input.name, input.calories);
         UIController.updateItem(editedItem);
-        const totalCalories = itemController.getTotalCalories();
-        UIController.showTotalCalories(totalCalories);
+        calculateAndShowCalories();
         UIController.clearEditState();
+        e.preventDefault();
+    }
+
+    const itemDeleteSubmit = function (e) {
+        
+        const currentItem = itemController.getCurrentItem();
+
+        itemController.deleteItem(currentItem.id);
+        UIController.deleteListItem(currentItem.id);
+        calculateAndShowCalories();
+        UIController.clearEditState();
+
         e.preventDefault();
     }
 
@@ -232,8 +267,7 @@ const appController = (function (itemController, UIController, storageController
         
         UIController.clearUIList();
         itemController.clearData();
-        const totalCalories = itemController.getTotalCalories();
-        UIController.showTotalCalories(totalCalories);
+        calculateAndShowCalories();
         e.preventDefault();
     }
 
