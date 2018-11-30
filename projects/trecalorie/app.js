@@ -32,6 +32,19 @@ const itemController = (function () {
             data.items.push(newItem);
             return newItem;
         },
+        getItemById: function (id) {
+            let foundItem;
+
+            data.items.forEach(item => {
+                if(item.id === id){
+                    foundItem = item;
+                }
+            })
+            return foundItem;
+        },
+        setCurrentItem: function (item) {
+            data.currentItem = item;
+        },
         getData: function () {
             return data;
         },
@@ -54,6 +67,9 @@ const UIController = (function () {
     const UISelectors = {
         itemList: '#item-list',
         addBtn : '.add-btn',
+        updateBtn : '.update-btn',
+        deleteBtn : '.delete-btn',
+        backBtn: '.back-btn',   
         itemName: '#item-name',
         itemCalories: '#item-calories',
         totalCalories: '.total-calories'
@@ -91,6 +107,13 @@ const UIController = (function () {
         },
         showTotalCalories: function (totalCalories) {
             document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
+        },
+        clearEditState: function () {
+            UIController.clearInputFields();
+            document.querySelector(UISelectors.updateBtn).style.display = 'none';
+            document.querySelector(UISelectors.deleteBtn).style.display = 'none';
+            document.querySelector(UISelectors.backBtn).style.display = 'none';
+            document.querySelector(UISelectors.addBtn).style.display = 'inline';
         }
     }
 
@@ -101,6 +124,7 @@ const appController = (function (itemController, UIController, storageController
     const loadEventListeners = function () {
         const UISelectors = UIController.getSelectors();
         document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
+        document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateSubmit);
     }
 
     const itemAddSubmit = function (e) {
@@ -119,9 +143,23 @@ const appController = (function (itemController, UIController, storageController
         e.preventDefault();
     }
 
+    const itemUpdateSubmit = function (e) {
+        
+        if(e.target.classList.contains('edit-item')){
+            const itemID = e.target.parentNode.parentNode.id;
+            const itemIDArr = itemID.split('-');
+            const id = parseInt(itemIDArr[1]);
+            const itemToEdit = itemController.getItemById(id);
+            console.log(itemToEdit);
+        }
+            
+        e.preventDefault();
+    }
+
 
     return {
         init: function () {
+            UIController.clearEditState();
             const items = itemController.getDataItems();
             UIController.populateItems(items);
             loadEventListeners();
