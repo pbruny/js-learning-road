@@ -22,6 +22,31 @@ const storageController = (function () {
             }
 
             return items;
+        },
+        updateItemStorage: function (updatedItem) {
+            let items = JSON.parse(localStorage.getItem('items'));
+
+            items.forEach((item, index) => {
+                if(updatedItem.id === item.id){
+                    items.splice(index, 1, updatedItem);
+                }
+            });
+
+            localStorage.setItem('items', JSON.stringify(items));
+        }, 
+        deleteItemFromStorage: function(id) {
+            items = JSON.parse(localStorage.getItem('items'));
+
+            items.forEach((item, index) => {
+                if(item.id === id){
+                    items.splice(index, 1);
+                }
+            })
+
+            localStorage.setItem('items', JSON.stringify(items));
+        }, 
+        clearItemsFromStorage: function () {
+            localStorage.removeItem('items');
         }
     }
 })();
@@ -227,7 +252,7 @@ const appController = (function (itemController, UIController, storageController
         })
         document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateClick);
         document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState);
-        document.querySelector(UISelectors.updateBtn).addEventListener('click', itenUpdateSubmit);
+        document.querySelector(UISelectors.updateBtn).addEventListener('click', itemUpdateSubmit);
         document.querySelector(UISelectors.clearBtn).addEventListener('click', clearListItems);
         document.querySelector(UISelectors.deleteBtn).addEventListener('click', itemDeleteSubmit);
     }
@@ -266,12 +291,13 @@ const appController = (function (itemController, UIController, storageController
         e.preventDefault();
     }
 
-    const itenUpdateSubmit = function (e) {
+    const itemUpdateSubmit = function (e) {
         const input = UIController.getItemInput();
         
         const editedItem = itemController.addUpdatedItem(input.name, input.calories);
         UIController.updateItem(editedItem);
         calculateAndShowCalories();
+        storageController.updateItemStorage(editedItem);
         UIController.clearEditState();
         e.preventDefault();
     }
@@ -283,6 +309,7 @@ const appController = (function (itemController, UIController, storageController
         itemController.deleteItem(currentItem.id);
         UIController.deleteListItem(currentItem.id);
         calculateAndShowCalories();
+        storageController.deleteItemFromStorage(currentItem.id);
         UIController.clearEditState();
 
         e.preventDefault();
@@ -293,6 +320,7 @@ const appController = (function (itemController, UIController, storageController
         UIController.clearUIList();
         itemController.clearData();
         calculateAndShowCalories();
+        storageController.clearItemsFromStorage();
         e.preventDefault();
     }
 
