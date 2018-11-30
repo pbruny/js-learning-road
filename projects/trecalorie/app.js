@@ -33,13 +33,28 @@ const itemController = (function () {
             return newItem;
         },
         getItemById: function (id) {
-            let foundItem;
+            let foundItem = null;
 
             data.items.forEach(item => {
                 if(item.id === id){
                     foundItem = item;
                 }
             })
+            return foundItem;
+        },
+        addUpdatedItem: function(name, calories) {
+            calories = parseInt(calories);
+
+            let foundItem = null;
+
+            data.items.forEach(item => {
+                if(item.id === data.currentItem.id){
+                    item.name = name;
+                    item.calories = calories;
+                    foundItem = item;
+                }
+            })
+
             return foundItem;
         },
         setCurrentItem: function (item) {
@@ -69,6 +84,7 @@ const itemController = (function () {
 const UIController = (function () {
     const UISelectors = {
         itemList: '#item-list',
+        listItems: '#item-list li',
         addBtn : '.add-btn',
         updateBtn : '.update-btn',
         deleteBtn : '.delete-btn',
@@ -128,6 +144,18 @@ const UIController = (function () {
             document.querySelector(UISelectors.deleteBtn).style.display = 'inline';
             document.querySelector(UISelectors.backBtn).style.display = 'inline';
             document.querySelector(UISelectors.addBtn).style.display = 'none';
+        },
+        updateItem: function(updatedItem){
+            let listItems = document.querySelectorAll(UISelectors.listItems);
+
+            listItems = Array.from(listItems);
+
+            listItems.forEach(item => {
+                const itemID = item.getAttribute('id');
+                if(itemID === `item-${updatedItem.id}`){
+                    document.querySelector(`#${itemID}`).innerHTML = `<strong>${updatedItem.name}:</strong> <em>${updatedItem.calories} calories</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a>`;
+                }
+            })
         }
     }
 
@@ -138,8 +166,15 @@ const appController = (function (itemController, UIController, storageController
     const loadEventListeners = function () {
         const UISelectors = UIController.getSelectors();
         document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
+        document.addEventListener('keypress', e => {
+            if(e.keyCode === 13 || e.which === 13){
+                e.preventDefault();
+                return false;
+            }
+        })
         document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateClick);
-        document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState)
+        document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState);
+        document.querySelector(UISelectors.updateBtn).addEventListener('click', itenUpdateSubmit);
     }
 
     const itemAddSubmit = function (e) {
@@ -169,6 +204,17 @@ const appController = (function (itemController, UIController, storageController
             UIController.addItemToEdit();
         }
             
+        e.preventDefault();
+    }
+
+    const itenUpdateSubmit = function (e) {
+        const input = UIController.getItemInput();
+        
+        const editedItem = itemController.addUpdatedItem(input.name, input.calories);
+        UIController.updateItem(editedItem);
+        const totalCalories = itemController.getTotalCalories();
+        UIController.showTotalCalories(totalCalories);
+        UIController.clearEditState();
         e.preventDefault();
     }
 
