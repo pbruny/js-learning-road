@@ -77,6 +77,11 @@ const itemController = (function () {
             data.totalCalories = calories;
 
             return data.totalCalories;
+        },
+        clearData: function () {
+            data.items.length = 0;
+            data.totalCalories = 0;
+            data.currentItem = null;
         }    
     }
 })();
@@ -88,6 +93,7 @@ const UIController = (function () {
         addBtn : '.add-btn',
         updateBtn : '.update-btn',
         deleteBtn : '.delete-btn',
+        clearBtn: '.clear-btn',
         backBtn: '.back-btn',   
         itemName: '#item-name',
         itemCalories: '#item-calories',
@@ -156,6 +162,9 @@ const UIController = (function () {
                     document.querySelector(`#${itemID}`).innerHTML = `<strong>${updatedItem.name}:</strong> <em>${updatedItem.calories} calories</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a>`;
                 }
             })
+        },
+        clearUIList: function () {
+            document.querySelector(UISelectors.itemList).innerHTML = '';
         }
     }
 
@@ -175,6 +184,7 @@ const appController = (function (itemController, UIController, storageController
         document.querySelector(UISelectors.itemList).addEventListener('click', itemUpdateClick);
         document.querySelector(UISelectors.backBtn).addEventListener('click', UIController.clearEditState);
         document.querySelector(UISelectors.updateBtn).addEventListener('click', itenUpdateSubmit);
+        document.querySelector(UISelectors.clearBtn).addEventListener('click', clearListItems);
     }
 
     const itemAddSubmit = function (e) {
@@ -215,6 +225,15 @@ const appController = (function (itemController, UIController, storageController
         const totalCalories = itemController.getTotalCalories();
         UIController.showTotalCalories(totalCalories);
         UIController.clearEditState();
+        e.preventDefault();
+    }
+
+    const clearListItems = function (e) {
+        
+        UIController.clearUIList();
+        itemController.clearData();
+        const totalCalories = itemController.getTotalCalories();
+        UIController.showTotalCalories(totalCalories);
         e.preventDefault();
     }
 
