@@ -1,15 +1,17 @@
 class UI {
-    constructor(){
+    constructor() {
         this.post = document.querySelector('.posts');
         this.titleInput = document.querySelector('#title');
         this.bodyInput = document.querySelector('#body');
         this.idInput = document.querySelector('#id');
         this.postSubmit = document.querySelector('.post-submit');
-        this.container = document.querySelector('.post-container')
+        this.container = document.querySelector('.post-container');
+        this.formEnd = document.querySelector('.form-end');
+        this.card = document.querySelector('.card');
         this.formState = 'add';
     }
 
-    showPosts(posts){
+    showPosts(posts) {
         let output = '';
 
         posts.forEach((post) => {
@@ -32,7 +34,7 @@ class UI {
         this.post.innerHTML = output;
     }
 
-    showAlert(message, className){
+    showAlert(message, className) {
         this.clearAlerts();
 
         const div = document.createElement('div');
@@ -41,23 +43,57 @@ class UI {
         div.appendChild(document.createTextNode(message));
 
         this.container.insertBefore(div, this.post);
-        
+
         setTimeout(() => {
             this.clearAlerts();
         }, 3000);
     }
 
-    clearAlerts(){
+    clearAlerts() {
         const currentAlert = document.querySelector('.alert');
 
-        if(currentAlert){
+        if (currentAlert) {
             currentAlert.remove();
         }
     }
 
-    clearFields(){
+    clearFields() {
         this.titleInput.value = '';
         this.bodyInput.value = '';
+    }
+
+    clearIdInput(){
+        this.idInput.value = '';
+    }
+
+    fillForm(data) {
+        this.titleInput.value = data.title;
+        this.bodyInput.value = data.body;
+        this.idInput.value = data.id;
+        this.changeFormState('edit');
+    }
+
+    changeFormState(type) {
+        if (type === 'edit') {
+            this.postSubmit.className = 'post-submit btn btn-warning btn-block';
+            this.postSubmit.textContent = 'Update Post';
+
+            const cancelBtn = document.createElement('a');
+            cancelBtn.className = 'post-cancel btn btn-light btn-block';
+            cancelBtn.appendChild(document.createTextNode('Cancel Edit'));
+
+            this.card.insertBefore(cancelBtn, this.formEnd);
+        } else {
+            this.postSubmit.className = 'post-submit btn btn-primary btn-block';
+            this.postSubmit.textContent = 'Add Post';
+
+            if(document.querySelector('.post-cancel')){
+                document.querySelector('.post-cancel').remove();
+            }
+            this.clearIdInput();
+            this.clearFields();
+        }
+
     }
 }
 
