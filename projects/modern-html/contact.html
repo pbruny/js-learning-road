@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hotel BT | Contact</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://kit.fontawesome.com/9cd039050f.js"></script>
+    <meta name="description" content="Welcome to the most amazing hotel in the entire universe and more! Enjoy!">
+    <meta name="keywords" content="hotel,amazing,stay,enjoy,fun,universe">
+</head>
+
+<body>
+    <header>
+        <nav id="navbar">
+            <div class="container">
+                <a href="index.html">
+                    <h1 class="logo">HBT</h1>
+                </a>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a class="current" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section id="contact-form" class="py-3">
+        <div class="container">
+            <h1 class="text-center text-big py-3"><span class="text-primary">Contact</span> Us</h1>
+            <p class="text-center lead">Please fill out the form below to contact us or book a room</p>
+            <form action="process.php">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea name="messsage" id="message"></textarea>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact-info" class="bg-dark">
+        <div class="container">
+            <div class="box">
+                <i class="fas fa-hotel fa-3x"></i>
+                <h3>Location</h3>
+                <p>Dom Tomaz st., Petrolina, PE</p>
+            </div>
+            <div class="box">
+                <i class="fas fa-phone fa-3x"></i>
+                <h3>Phone Number</h3>
+                <p>(87) 95533-6691</p>
+            </div>
+            <div class="box">
+                <i class="fas fa-envelope fa-3x"></i>
+                <h3>Email Adress</h3>
+                <p>hbt@hbt.com</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-footer">
+        <p>Hotel BT &copy; 2019, All Rights Reserved</p>
+    </footer>
+</body>
+
+</html>
